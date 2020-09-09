@@ -11,19 +11,12 @@ namespace MyParsLib.ParseIntoJson
     {
         private static readonly JsonData<T> _jsonData = new JsonData<T>();
 
-        public List<T> ParseFile()
+        public List<T> ParseFile(string jsonUrl)
         {
-            var jsonData = _jsonData.GetJsonFile();
+            var jsonData = _jsonData.GetJsonFile(jsonUrl);
             var persons = ConverJSONToObjectArray(jsonData);
 
             return persons;
-        }
-
-        public List<T> ParseFile(string jsonUrl)
-        {
-            _jsonData.WriteJsonFile(jsonUrl);
-
-            return ParseFile();
         }
 
         private List<T> ConverJSONToObjectArray(string jsonData)
@@ -49,7 +42,7 @@ namespace MyParsLib.ParseIntoJson
             return values.Where(val => properties.Contains(val.Value.Split(':')[0].Replace("\"", ""))).Select(val => val).ToList();
         }
 
-        public virtual MatchCollection ParseJSON(string jsonData)
+        private MatchCollection ParseJSON(string jsonData)
         {
             var regexSelector = @"(\S\w*\S:\S\w*-\w*-\w*\S)|(\S\w*\S:\S?\w*\S?)";
             var regex = new Regex(regexSelector);
